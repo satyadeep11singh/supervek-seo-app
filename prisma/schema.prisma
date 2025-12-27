@@ -10,7 +10,7 @@ generator client {
 // See https://www.prisma.io/docs/orm/reference/prisma-schema-reference#string for more information
 datasource db {
   provider = "sqlite"
-  url      = "file:dev.sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model Session {
@@ -31,4 +31,37 @@ model Session {
   emailVerified Boolean?  @default(false)
   refreshToken        String?
   refreshTokenExpires DateTime?
+}
+
+model BlogTopicResearch {
+  id                  String   @id @default(cuid())
+  shop                String
+  
+  // Research content
+  title               String
+  primaryKeyword      String
+  secondaryKeywords   String   // JSON stringified array
+  searchIntent        String   // Informational/Commercial/Transactional
+  contentAngle        String
+  targetAudience      String
+  trendJustification  String
+  competitiveGap      String
+  category            String   // Product Education, Comparison, Problem-Solution, etc.
+  
+  // Meta info
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  
+  @@index([shop])
+  @@index([category])
+}
+
+model KeywordSuggestionCache {
+  id          String   @id @default(cuid())
+  shop        String   @unique
+  topicIds    String   // JSON stringified array of topic IDs
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([shop])
 }
