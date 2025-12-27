@@ -8,7 +8,17 @@ import styles from "./styles.module.css";
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
 
+  // If shop param exists, redirect to auth/login
   if (url.searchParams.get("shop")) {
+    throw redirect(`/app?${url.searchParams.toString()}`);
+  }
+
+  // If this is an embedded app request (has Shopify params), redirect to /app
+  if (
+    url.searchParams.get("embedded") ||
+    url.searchParams.get("hmac") ||
+    url.searchParams.get("host")
+  ) {
     throw redirect(`/app?${url.searchParams.toString()}`);
   }
 
