@@ -14,27 +14,22 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     throw redirect(`/app?${url.searchParams.toString()}`);
   }
 
-  return { 
-    showForm: Boolean(login),
-    isEmbedded: Boolean(
-      url.searchParams.get("embedded") ||
-      url.searchParams.get("hmac") ||
-      url.searchParams.get("host")
-    ),
-    searchParams: url.search,
-  };
+  // If this is an embedded app request (has Shopify params), redirect to /app on server
+  const isEmbedded = Boolean(
+    url.searchParams.get("embedded") ||
+    url.searchParams.get("hmac") ||
+    url.searchParams.get("host")
+  );
+  
+  if (isEmbedded) {
+    throw redirect(`/app${url.search}`);
+  }
+
+  return { showForm: Boolean(login) };
 };
 
 export default function App() {
-  const { showForm, isEmbedded, searchParams } = useLoaderData<typeof loader>();
-  const navigate = useNavigate();
-
-  // Client-side redirect for embedded app
-  useEffect(() => {
-    if (isEmbedded) {
-      navigate(`/app${searchParams}`);
-    }
-  }, [isEmbedded, searchParams, navigate]);
+  const { showForm } = useLoaderData<typeof loader>();
 
   return (
     <div className={styles.index}>
