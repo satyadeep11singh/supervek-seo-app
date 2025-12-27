@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import type { LoaderFunctionArgs } from "react-router";
-import { redirect, Form, useLoaderData, useNavigate, useEffect } from "react-router";
+import { redirect, Form, useLoaderData, useNavigate } from "react-router";
 
 import { login } from "../../shopify.server";
 
