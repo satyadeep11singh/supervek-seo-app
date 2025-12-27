@@ -106,6 +106,22 @@ export default function Index() {
   const fetcher = useFetcher<ActionData>();
   const isLoading = fetcher.state === "submitting";
 
+  // Check for selected topic from topics library
+  useEffect(() => {
+    const selectedTopic = sessionStorage.getItem("selectedTopic");
+    if (selectedTopic) {
+      try {
+        const { keyword: topicKeyword, secondaryKeywords: topicSecondaryKeywords } = JSON.parse(selectedTopic);
+        setKeyword(topicKeyword);
+        setSecondaryKeywords(topicSecondaryKeywords);
+        // Clear the stored data after using it
+        sessionStorage.removeItem("selectedTopic");
+      } catch (e) {
+        console.error("Error parsing selected topic:", e);
+      }
+    }
+  }, []);
+
   // Sync refs to state
   useEffect(() => {
     if (searchIntentRef.current) searchIntentRef.current.value = searchIntent;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLoaderData, Link } from "react-router";
+import { useLoaderData, Link, useNavigate } from "react-router";
 import { authenticate } from "../shopify.server";
 import type { LoaderFunctionArgs } from "react-router";
 import prisma from "../db.server";
@@ -52,6 +52,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; border: string; text: string
 
 export default function TopicsLibrary() {
   const { topics, shop } = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -59,6 +60,15 @@ export default function TopicsLibrary() {
   const filtered = selectedCategory
     ? topics.filter((t) => t.category === selectedCategory)
     : topics;
+
+  const useTopicAsKeyword = (topic: Topic) => {
+    // Store the selected topic in sessionStorage to be picked up by the home page
+    sessionStorage.setItem("selectedTopic", JSON.stringify({
+      keyword: topic.primaryKeyword,
+      secondaryKeywords: topic.secondaryKeywords.join(", "),
+    }));
+    navigate("/app");
+  };
 
   if (topics.length === 0) {
     return (
@@ -302,6 +312,28 @@ export default function TopicsLibrary() {
                     }}
                   >
                     {isExpanded ? "Show Less" : "Show More"}
+                  </button>
+                  <button
+                    onClick={() => useTopicAsKeyword(topic)}
+                    style={{
+                      flex: 1,
+                      padding: "0.5rem",
+                      backgroundColor: "#8b5cf6",
+                      border: "none",
+                      borderRadius: "4px",
+                      fontSize: "0.875rem",
+                      fontWeight: "600",
+                      cursor: "pointer",
+                      color: "#fff",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = "#7c3aed";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = "#8b5cf6";
+                    }}
+                  >
+                    Use This Topic
                   </button>
                 </div>
               </div>
