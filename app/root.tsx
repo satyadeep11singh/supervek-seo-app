@@ -1,4 +1,22 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import type { LoaderFunctionArgs } from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, redirect } from "react-router";
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
+  
+  // If this is an embedded request at root, redirect to /app
+  const isEmbedded = Boolean(
+    url.searchParams.get("embedded") ||
+    url.searchParams.get("hmac") ||
+    url.searchParams.get("host")
+  );
+  
+  if (isEmbedded && url.pathname === "/") {
+    throw redirect(`/app${url.search}`);
+  }
+
+  return null;
+};
 
 export default function App() {
   return (

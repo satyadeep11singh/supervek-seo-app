@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import type { LoaderFunctionArgs } from "react-router";
-import { redirect, Form, useLoaderData, useNavigate } from "react-router";
+import { redirect, Form, useLoaderData } from "react-router";
 
 import { login } from "../../shopify.server";
 
@@ -19,15 +18,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function App() {
   const { showForm } = useLoaderData<typeof loader>();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // If embedded, navigate to /app
-    const url = new URL(window.location.href);
-    if (url.searchParams.get("embedded") || url.searchParams.get("hmac") || url.searchParams.get("host")) {
-      navigate(`/app${url.search}`);
-    }
-  }, [navigate]);
 
   return (
     <div className={styles.index}>
