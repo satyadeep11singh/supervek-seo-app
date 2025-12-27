@@ -2,12 +2,11 @@
 
 client_id = "b4872c75aa1bb3c97993baf4528ff83f"
 name = "supervek-seo-app"
-application_url = "https://example.com"
+application_url = "https://supervek-seo-app-production.up.railway.app"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
-include_config_on_deploy = true
 
 [webhooks]
 api_version = "2026-01"
@@ -25,4 +24,4 @@ api_version = "2026-01"
 scopes = "write_products,write_content,read_content"
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [ "https://supervek-seo-app-production.up.railway.app/auth/callback" ]
