@@ -7,7 +7,7 @@
     "deploy": "shopify app deploy",
     "start": "react-router-serve ./build/server/index.js",
     "docker-start": "npm run migrate-and-start",
-    "migrate-and-start": "npm run resolve-migrations && npm run migrate && npm run start",
+    "migrate-and-start": "npm run resolve-migrations && npm run setup && npm run migrate && npm run start",
     "resolve-migrations": "prisma migrate resolve --rolled-back 20240530213853_create_session_table || true",
     "setup": "prisma generate",
     "migrate": "prisma migrate deploy",
