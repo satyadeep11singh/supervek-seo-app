@@ -1,5 +1,5 @@
 import type { LoaderFunctionArgs } from "react-router";
-import { redirect, Form, useLoaderData } from "react-router";
+import { redirect, Form, useLoaderData, useNavigate, useEffect } from "react-router";
 
 import { login } from "../../shopify.server";
 
@@ -13,20 +13,27 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     throw redirect(`/app?${url.searchParams.toString()}`);
   }
 
-  // If this is an embedded app request (has Shopify params), redirect to /app
-  if (
-    url.searchParams.get("embedded") ||
-    url.searchParams.get("hmac") ||
-    url.searchParams.get("host")
-  ) {
-    throw redirect(`/app?${url.searchParams.toString()}`);
-  }
-
-  return { showForm: Boolean(login) };
+  return { 
+    showForm: Boolean(login),
+    isEmbedded: Boolean(
+      url.searchParams.get("embedded") ||
+      url.searchParams.get("hmac") ||
+      url.searchParams.get("host")
+    ),
+    searchParams: url.search,
+  };
 };
 
 export default function App() {
-  const { showForm } = useLoaderData<typeof loader>();
+  const { showForm, isEmbedded, searchParams } = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
+
+  // Client-side redirect for embedded app
+  useEffect(() => {
+    if (isEmbedded) {
+      navigate(`/app${searchParams}`);
+    }
+  }, [isEmbedded, searchParams, navigate]);
 
   return (
     <div className={styles.index}>
