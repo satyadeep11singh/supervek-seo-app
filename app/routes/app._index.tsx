@@ -55,7 +55,7 @@ export default function Index() {
   };
 
   return (
-    <s-page heading="AI Blog Generator">
+    <s-page heading="Supervek Blog Generator">
       {fetcher.data?.error && (
         <s-banner title="Error" tone="critical">
           <s-paragraph>{fetcher.data.error}</s-paragraph>

@@ -65,14 +65,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       });
     });
 
+    // Filter to show only Draft articles (isPublished === false)
+    const draftArticles = allArticles.filter((article) => !article.isPublished);
+
     // Sort by creation date (newest first)
-    allArticles.sort(
+    draftArticles.sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
 
     return {
-      articles: allArticles,
+      articles: draftArticles,
       shop: session?.shop.replace(".myshopify.com", ""),
     };
   } catch (error) {
