@@ -3,6 +3,7 @@ import { useFetcher, useLoaderData, Link } from "react-router";
 import { authenticate } from "../shopify.server";
 import type { LoaderFunctionArgs } from "react-router";
 import prisma from "../db.server";
+import { TYPOGRAPHY_STYLES, buttonHoverEffect, cardHoverEffect } from "../utils/typography";
 
 interface Suggestion {
   id: string;
@@ -174,37 +175,21 @@ export default function Index() {
       {!hasTopics ? (
         <s-section>
           <div style={{ padding: "2rem", backgroundColor: "#f0f9ff", borderRadius: "8px", border: "2px solid #0ea5e9", marginBottom: "2rem" }}>
-            <h3 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#0c4a6e", marginBottom: "0.75rem" }}>
+            <h3 style={{ ...TYPOGRAPHY_STYLES.headingSubsection, color: "#0c4a6e", marginBottom: "0.75rem" }}>
               🚀 Generate Research Topics
             </h3>
-            <p style={{ color: "#0c4a6e", marginBottom: "1rem" }}>
+            <p style={{ ...TYPOGRAPHY_STYLES.body, color: "#0c4a6e", marginBottom: "1rem" }}>
               Run AI research to discover 20-30 blog topics tailored to your niche. This will analyze trends, competitors, and customer needs.
             </p>
             <button
               onClick={handleRunResearch}
               disabled={researchLoading}
               style={{
-                padding: "0.75rem 1.5rem",
+                ...TYPOGRAPHY_STYLES.buttonPrimary,
                 backgroundColor: researchLoading ? "#cbd5e1" : "#0284c7",
                 color: "#fff",
-                border: "none",
-                borderRadius: "6px",
-                fontWeight: "600",
-                cursor: researchLoading ? "not-allowed" : "pointer",
-                transition: "all 0.2s ease",
               }}
-              onMouseEnter={(e) => {
-                if (!researchLoading) {
-                  e.currentTarget.style.backgroundColor = "#0369a1";
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!researchLoading) {
-                  e.currentTarget.style.backgroundColor = "#0284c7";
-                  e.currentTarget.style.transform = "translateY(0)";
-                }
-              }}
+              {...(researchLoading ? {} : buttonHoverEffect("#0284c7", "#0369a1"))}
             >
               {researchLoading ? "⏳ Running Research..." : "🔍 Run Research"}
             </button>
@@ -214,19 +199,16 @@ export default function Index() {
         <s-section>
           <div style={{ marginBottom: "2rem" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-              <h3 style={{ fontSize: "1.25rem", fontWeight: "700", color: "#1f2937", margin: "0" }}>
+              <h3 style={{ ...TYPOGRAPHY_STYLES.headingSubsection, margin: "0" }}>
                 💡 Today's Recommended Topics
               </h3>
               <Link
                 to="/app/topics-library"
                 style={{
-                  padding: "0.5rem 1rem",
+                  ...TYPOGRAPHY_STYLES.buttonSecondary,
                   backgroundColor: "#8b5cf6",
                   color: "#fff",
                   textDecoration: "none",
-                  borderRadius: "6px",
-                  fontSize: "0.875rem",
-                  fontWeight: "600",
                 }}
               >
                 View All Topics
@@ -245,45 +227,26 @@ export default function Index() {
                       border: "1px solid #e5e7eb",
                       transition: "all 0.2s ease",
                     }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = "#f3f4f6";
-                      e.currentTarget.style.boxShadow = "0 4px 6px rgba(0,0,0,0.1)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = "#f9fafb";
-                      e.currentTarget.style.boxShadow = "none";
-                    }}
+                    {...cardHoverEffect()}
                   >
-                    <p style={{ fontSize: "0.75rem", fontWeight: "600", color: "#8b5cf6", marginBottom: "0.5rem" }}>
+                    <p style={{ ...TYPOGRAPHY_STYLES.labelSmall, color: "#8b5cf6", marginBottom: "0.5rem" }}>
                       {suggestion.category}
                     </p>
-                    <h4 style={{ fontSize: "1rem", fontWeight: "700", color: "#1f2937", marginBottom: "0.75rem" }}>
+                    <h4 style={{ ...TYPOGRAPHY_STYLES.headingCard, marginBottom: "0.75rem" }}>
                       {suggestion.title}
                     </h4>
-                    <p style={{ fontSize: "0.875rem", color: "#4b5563", marginBottom: "1rem" }}>
+                    <p style={{ ...TYPOGRAPHY_STYLES.body, marginBottom: "1rem" }}>
                       <strong>Keyword:</strong> {suggestion.primaryKeyword}
                     </p>
                     <button
                       onClick={() => useSuggestion(suggestion)}
                       style={{
                         width: "100%",
-                        padding: "0.625rem",
+                        ...TYPOGRAPHY_STYLES.buttonSecondary,
                         backgroundColor: "#8b5cf6",
                         color: "#fff",
-                        border: "none",
-                        borderRadius: "6px",
-                        fontWeight: "600",
-                        cursor: "pointer",
-                        transition: "all 0.2s ease",
                       }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "#7c3aed";
-                        e.currentTarget.style.transform = "translateY(-1px)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = "#8b5cf6";
-                        e.currentTarget.style.transform = "translateY(0)";
-                      }}
+                      {...buttonHoverEffect("#8b5cf6", "#7c3aed")}
                     >
                       Use This Topic
                     </button>
@@ -301,7 +264,7 @@ export default function Index() {
             <s-form-layout>
               {/* Primary Section */}
               <div style={{ marginBottom: "2rem" }}>
-                <h3 style={{ fontSize: "1.1rem", fontWeight: "600", marginBottom: "1rem", color: "#1f2937" }}>Content Keywords</h3>
+                <h3 style={{ ...TYPOGRAPHY_STYLES.headingSubsection, marginBottom: "1rem" }}>Content Keywords</h3>
                 <s-stack direction="block" gap="base">
                   <s-text-field
                     label="Primary Keyword"
@@ -323,10 +286,10 @@ export default function Index() {
 
               {/* SEO Settings Section */}
               <div style={{ marginBottom: "2rem" }}>
-                <h3 style={{ fontSize: "1.1rem", fontWeight: "600", marginBottom: "1rem", color: "#1f2937" }}>SEO Settings</h3>
+                <h3 style={{ ...TYPOGRAPHY_STYLES.headingSubsection, marginBottom: "1rem" }}>SEO Settings</h3>
                 <s-stack direction="block" gap="base">
                   <div>
-                    <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "500", color: "#374151" }}>
+                    <label style={{ ...TYPOGRAPHY_STYLES.label, display: "block", marginBottom: "0.5rem" }}>
                       Search Intent
                     </label>
                     <select
@@ -352,7 +315,7 @@ export default function Index() {
                   </div>
 
                   <div>
-                    <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "500", color: "#374151" }}>
+                    <label style={{ ...TYPOGRAPHY_STYLES.label, display: "block", marginBottom: "0.5rem" }}>
                       Target Country
                     </label>
                     <select
@@ -384,10 +347,10 @@ export default function Index() {
 
               {/* Audience & Tone Section */}
               <div style={{ marginBottom: "2rem" }}>
-                <h3 style={{ fontSize: "1.1rem", fontWeight: "600", marginBottom: "1rem", color: "#1f2937" }}>Audience & Voice</h3>
+                <h3 style={{ ...TYPOGRAPHY_STYLES.headingSubsection, marginBottom: "1rem" }}>Audience & Voice</h3>
                 <s-stack direction="block" gap="base">
                   <div>
-                    <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "500", color: "#374151" }}>
+                    <label style={{ ...TYPOGRAPHY_STYLES.label, display: "block", marginBottom: "0.5rem" }}>
                       Target Audience Level
                     </label>
                     <select
@@ -412,7 +375,7 @@ export default function Index() {
                   </div>
 
                   <div>
-                    <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "500", color: "#374151" }}>
+                    <label style={{ ...TYPOGRAPHY_STYLES.label, display: "block", marginBottom: "0.5rem" }}>
                       Tone & Voice
                     </label>
                     <select
