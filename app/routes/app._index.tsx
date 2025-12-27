@@ -97,6 +97,7 @@ export default function Index() {
   const [tone, setTone] = useState("authoritative");
   const [wordCount, setWordCount] = useState("1500");
   const [researchLoading, setResearchLoading] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const searchIntentRef = useRef<HTMLSelectElement>(null);
   const countryRef = useRef<HTMLSelectElement>(null);
@@ -130,7 +131,19 @@ export default function Index() {
     if (toneRef.current) toneRef.current.value = tone;
   }, [searchIntent, targetCountry, audienceLevel, tone]);
 
+  // Hide spinner when generation completes
+  useEffect(() => {
+    if (fetcher.data?.success || fetcher.data?.error) {
+      setShowSpinner(false);
+    }
+  }, [fetcher.data]);
+
   const handleSubmit = () => {
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    // Show spinner
+    setShowSpinner(true);
+    
     const formData = new FormData();
     formData.append("keyword", keyword);
     formData.append("secondaryKeywords", secondaryKeywords);
@@ -167,6 +180,53 @@ export default function Index() {
 
   return (
     <s-page heading="Supervek Blog Generator">
+      {/* Spinner Overlay */}
+      {showSpinner && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "1rem",
+            }}
+          >
+            <div
+              style={{
+                width: "50px",
+                height: "50px",
+                border: "4px solid rgba(255, 255, 255, 0.3)",
+                borderTop: "4px solid #fff",
+                borderRadius: "50%",
+                animation: "spin 1s linear infinite",
+              }}
+            />
+            <p style={{ color: "#fff", fontSize: "1.125rem", fontWeight: "600", margin: 0 }}>
+              ✨ Generating Your Blog Post...
+            </p>
+          </div>
+          <style>{`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}</style>
+        </div>
+      )}
+
       {fetcher.data?.error && (
         <s-banner title="⚠️ Generation Error" tone="critical">
           <s-paragraph>{fetcher.data.error}</s-paragraph>
