@@ -163,25 +163,68 @@ NOW EXECUTE: Create the complete SEO-optimized blog article following all requir
         .replace(/\n?```$/, "")
         .trim();
 
-      // Extract JSON from the response
-      const jsonMatch = cleanedText.match(/\{[\s\S]*\}/);
+      // Log the response for debugging
+      console.log("Cleaned response length:", cleanedText.length);
+      console.log("First 500 chars:", cleanedText.substring(0, 500));
+
+      // Extract JSON from the response - more aggressive extraction
+      let jsonMatch = cleanedText.match(/\{[\s\S]*\}$/);
       if (!jsonMatch) {
-        throw new Error("No JSON found in Gemini response: " + text);
+        jsonMatch = cleanedText.match(/\{[\s\S]*\}/);
       }
 
-      blogData = JSON.parse(jsonMatch[0]);
+      if (!jsonMatch) {
+        console.error("Failed to find JSON in response:", cleanedText);
+        throw new Error(
+          "AI response did not contain valid JSON. This might be a temporary issue. Please try again."
+        );
+      }
+
+      const jsonString = jsonMatch[0];
+      
+      // Attempt to parse JSON with better error messaging
+      try {
+        blogData = JSON.parse(jsonString);
+      } catch (jsonError) {
+        console.error("JSON Parse Error:", jsonError);
+        console.error("Failed JSON string:", jsonString.substring(0, 1000));
+        
+        // Provide more helpful error message
+        if (jsonError instanceof SyntaxError) {
+          const match = jsonError.message.match(/position (\d+)/);
+          const position = match ? parseInt(match[1]) : 0;
+          const context = jsonString.substring(
+            Math.max(0, position - 100),
+            Math.min(jsonString.length, position + 100)
+          );
+          throw new Error(
+            `Invalid JSON from AI at position ${position}. The AI response format was incorrect. Please try again.`
+          );
+        }
+        throw new Error("Failed to parse AI response. Please try again.");
+      }
 
       // Validate required fields
-      if (!blogData.selectedTitle || !blogData.content || !blogData.metaDescription) {
-        throw new Error("Missing required fields in AI response");
+      const requiredFields = ["selectedTitle", "content", "metaDescription"];
+      const missingFields = requiredFields.filter(
+        (field) => !blogData[field as keyof BlogData]
+      );
+
+      if (missingFields.length > 0) {
+        throw new Error(
+          `AI response missing required fields: ${missingFields.join(", ")}. Please try again.`
+        );
       }
     } catch (parseError) {
-      console.error("Failed to parse Gemini response:", text);
+      console.error("Failed to parse Gemini response:", text.substring(0, 1000));
       const errorMsg =
         parseError instanceof Error
           ? parseError.message
-          : "Failed to parse AI response";
-      return Response.json({ error: errorMsg }, { status: 500 });
+          : "Failed to parse AI response. Please try again.";
+      return Response.json(
+        { error: `Generation Error: ${errorMsg}` },
+        { status: 500 }
+      );
     }
 
     // 7. Get the first blog (create one if none exists)
@@ -286,7 +329,7 @@ NOW EXECUTE: Create the complete SEO-optimized blog article following all requir
       );
       return Response.json(
         {
-          error: `Shopify error: ${articleData.data.articleCreate.userErrors[0].message}`,
+          error: `Failed to create article: ${articleData.data.articleCreate.userErrors[0].message}`,
         },
         { status: 500 }
       );
@@ -306,10 +349,24 @@ NOW EXECUTE: Create the complete SEO-optimized blog article following all requir
     });
   } catch (error) {
     console.error("Error generating blog:", error);
-    const errorMessage =
-      error instanceof Error && error.message
-        ? error.message
-        : "An unexpected error occurred";
+    let errorMessage = "An unexpected error occurred while generating your blog post. Please try again.";
+
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === "string") {
+      errorMessage = error;
+    }
+
+    // Provide specific guidance for common errors
+    if (errorMessage.includes("JSON")) {
+      errorMessage = "The AI response format was invalid. Please try again. If this persists, try a different keyword.";
+    } else if (errorMessage.includes("timeout")) {
+      errorMessage = "The request took too long. Please try again with a simpler keyword.";
+    } else if (errorMessage.includes("GEMINI_API_KEY")) {
+      errorMessage = "Configuration error: API key not found. Please contact support.";
+    }
+
+    console.error("Final error message:", errorMessage);
     return Response.json({ error: errorMessage }, { status: 500 });
   }
 };

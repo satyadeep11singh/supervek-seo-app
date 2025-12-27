@@ -152,13 +152,16 @@ export default function Index() {
   return (
     <s-page heading="Supervek Blog Generator">
       {fetcher.data?.error && (
-        <s-banner title="Error" tone="critical">
+        <s-banner title="⚠️ Generation Error" tone="critical">
           <s-paragraph>{fetcher.data.error}</s-paragraph>
+          <s-paragraph style={{ marginTop: "1rem", fontSize: "0.875rem", color: "#666" }}>
+            💡 <strong>Troubleshooting tip:</strong> Try with a different keyword or simpler search term. If the issue persists, wait a moment and try again.
+          </s-paragraph>
         </s-banner>
       )}
 
       {fetcher.data?.success && (
-        <s-banner title="Blog Generated Successfully!" tone="success">
+        <s-banner title="✅ Blog Generated Successfully!" tone="success">
           <s-paragraph>
             Your blog post has been created as a draft.{" "}
             <s-link
