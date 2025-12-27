@@ -48,9 +48,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     );
     const rotationIndex = dayOfYear % allTopics.length;
     
-    // Get 3 suggestions starting from rotation index
+    // Get 4 suggestions starting from rotation index
     const suggestions: Suggestion[] = [];
-    for (let i = 0; i < Math.min(3, allTopics.length); i++) {
+    for (let i = 0; i < Math.min(4, allTopics.length); i++) {
       const topic = allTopics[(rotationIndex + i) % allTopics.length];
       suggestions.push({
         id: topic.id,
