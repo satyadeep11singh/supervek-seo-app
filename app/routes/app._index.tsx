@@ -92,7 +92,7 @@ export default function Index() {
   const [keyword, setKeyword] = useState("");
   const [secondaryKeywords, setSecondaryKeywords] = useState("");
   const [searchIntent, setSearchIntent] = useState("informational");
-  const [targetCountry, setTargetCountry] = useState("US");
+  const [targetCountry, setTargetCountry] = useState("IN");
   const [audienceLevel, setAudienceLevel] = useState("intermediate");
   const [tone, setTone] = useState("authoritative");
   const [wordCount, setWordCount] = useState("1500");
