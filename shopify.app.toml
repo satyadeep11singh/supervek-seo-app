@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "b4872c75aa1bb3c97993baf4528ff83f"
-name = "supervek-seo-app"
+client_id = "07ab69ee83fd5371870f61a6bad717ff"
+name = "svk-seo-prod"
 application_url = "https://supervek-seo-app-production.up.railway.app"
 embedded = true
 
