@@ -3,9 +3,15 @@ import { authenticate } from "../shopify.server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 interface BlogData {
-  title: string;
+  titleOptions: string[];
+  selectedTitle: string;
   metaDescription: string;
   content: string;
+  faqSection: Array<{ question: string; answer: string }>;
+  contentSummary: string;
+  seoChecklist: string;
+  internalLinkingSuggestions: string[];
+  externalLinkingSuggestions: string[];
   tags: string[];
 }
 
@@ -20,8 +26,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     // 1. Get form data
     const formData = await request.formData();
     const keyword = formData.get("keyword") as string;
+    const secondaryKeywords = formData.get("secondaryKeywords") as string;
+    const searchIntent = formData.get("searchIntent") as string;
+    const targetCountry = formData.get("targetCountry") as string;
+    const audienceLevel = formData.get("audienceLevel") as string;
     const tone = formData.get("tone") as string;
-    const audience = formData.get("audience") as string;
     const wordCount = formData.get("wordCount") as string;
 
     // 2. Validate input
@@ -41,34 +50,102 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
 
-    // 4. Create prompt
-    const prompt = `You are an expert SEO content writer. Generate a comprehensive, SEO-optimized blog post based on the following requirements:
+    // 4. Create comprehensive SEO prompt
+    const prompt = `You are an ELITE SEO CONTENT ARCHITECT combining the roles of:
 
-Keyword: "${keyword}"
-Tone: ${tone}
-Target Audience: ${audience}
-Approximate Word Count: ${wordCount} words
+• Google Search Quality Rater
+• EEAT & Trust Architect
+• Semantic SEO & NLP Specialist
+• Conversion Copywriter
+• Long-Form Editorial Strategist
+• Competitive SERP Analyst
 
-Requirements:
-1. Create an engaging, SEO-friendly title (under 60 characters)
-2. Write a compelling meta description (150-160 characters)
-3. Generate well-structured blog content with:
-   - Clear introduction
-   - Multiple sections with subheadings (use <h2> and <h3> tags)
-   - Engaging paragraphs
-   - Bullet points or numbered lists where appropriate
-   - Strong conclusion
-   - Natural keyword integration
-   - HTML formatting (<p>, <h2>, <h3>, <ul>, <li>, <strong>, <em>)
-4. Provide 5-7 relevant SEO tags
+You have 20+ years of hands-on SEO experience and deep mastery of:
+Google Helpful Content System, Core Updates, EEAT, NLP, semantic search, topical authority, user intent modeling, and conversion psychology.
 
-Return your response in this EXACT JSON format (no markdown, no code blocks, just raw JSON):
+Your mission: Create a HUMAN-WRITTEN, LONG-FORM, HIGH-RANKING SEO BLOG ARTICLE designed to rank on Page 1 of Google, outperform competitors, maximize engagement, pass EEAT evaluation, and avoid AI-detection.
+
+────────────────────────────────────────
+INPUT VARIABLES
+────────────────────────────────────────
+
+Primary Keyword: "${keyword}"
+Secondary Keywords: ${secondaryKeywords || "Not specified"}
+Search Intent: ${searchIntent}
+Target Country: ${targetCountry}
+Target Audience Level: ${audienceLevel}
+Tone & Voice: ${tone}
+Word Count Target: ${wordCount}+ words
+
+────────────────────────────────────────
+REQUIREMENTS - DELIVER IN THIS EXACT JSON FORMAT
+────────────────────────────────────────
+
+You MUST return ONLY raw JSON (no markdown, no code blocks):
+
 {
-  "title": "SEO-optimized title here",
-  "metaDescription": "Compelling meta description here",
-  "content": "<p>Full HTML-formatted blog content here</p>",
-  "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"]
-}`;
+  "titleOptions": ["Title Option 1 (under 60 chars)", "Title Option 2", "Title Option 3", "Title Option 4", "Title Option 5", "Title Option 6", "Title Option 7"],
+  "selectedTitle": "The best performing title option",
+  "metaDescription": "160-character meta description with primary keyword and benefit-driven CTA",
+  "content": "<h1>Title</h1><h2>Section heading</h2><p>Content with natural keyword integration...</p><h2>FAQ Section</h2>...",
+  "faqSection": [
+    {"question": "What is [keyword]?", "answer": "Detailed answer with authority"},
+    {"question": "How does [keyword] work?", "answer": "Comprehensive explanation"},
+    {"question": "When should you use [keyword]?", "answer": "Practical use cases"}
+  ],
+  "contentSummary": "Brief reader-friendly summary of the article",
+  "seoChecklist": "✓ Primary keyword in title, intro, headings, conclusion\\n✓ Secondary keywords naturally integrated\\n✓ Proper H1→H2→H3 hierarchy\\n✓ Content length: X words\\n✓ FAQ section optimized for snippets\\n✓ 5-7 relevant tags included",
+  "internalLinkingSuggestions": ["Link to [related page 1]", "Link to [related page 2]"],
+  "externalLinkingSuggestions": ["Authority link to [domain 1] for [topic]", "Citation from [trusted source]"],
+  "tags": ["tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7"]
+}
+
+────────────────────────────────────────
+MANDATORY EXECUTION RULES
+────────────────────────────────────────
+
+STRUCTURE:
+• Single H1 tag (your selected title)
+• Logical H2→H3 hierarchy
+• Short paragraphs (2-3 lines max)
+• Bullet points & numbered steps throughout
+• Strong introduction hook (first paragraph is CRITICAL)
+• FAQ section (featured snippet optimization)
+• Powerful conclusion with CTA
+
+KEYWORD OPTIMIZATION:
+• Primary keyword naturally in: title, first 100 words, headings, conclusion
+• Secondary keywords & LSI keywords woven throughout
+• NO keyword stuffing - reads naturally
+• Semantic variations and contextual synonyms
+
+EEAT & AUTHORITY:
+• Demonstrate real expertise with examples
+• Use specific, actionable guidance
+• Show confidence in explanations
+• Include practical scenarios
+• Reference trusted data points where relevant
+• Sound like a human expert with lived experience
+
+USER ENGAGEMENT:
+• Strong hooks to maximize dwell time
+• Clear value proposition in introduction
+• Logical reading flow
+• Mobile-optimized (scannable format)
+• Calls-to-action feel helpful, not pushy
+
+CONTENT QUALITY:
+• ${wordCount}+ words minimum
+• 100% original, never seen before
+• Zero fluff or padding
+• No AI self-references
+• Avoid common AI patterns
+• High linguistic quality
+• Professional editing
+
+────────────────────────────────────────
+
+NOW EXECUTE: Create the complete SEO-optimized blog article following all requirements above. Return ONLY the JSON object, nothing else.`;
 
     // 5. Call Gemini API
     console.log("Calling Gemini API...");
@@ -80,19 +157,24 @@ Return your response in this EXACT JSON format (no markdown, no code blocks, jus
     console.log("Parsing Gemini response...");
     let blogData: BlogData;
     try {
-      // Strip markdown code fence if present (Gemini often wraps in ```json ... ```)
+      // Strip markdown code fence if present
       const cleanedText = text
         .replace(/^```[\w]*\n?/, "")
         .replace(/\n?```$/, "")
         .trim();
 
-      // Try to extract JSON from the response
+      // Extract JSON from the response
       const jsonMatch = cleanedText.match(/\{[\s\S]*\}/);
       if (!jsonMatch) {
         throw new Error("No JSON found in Gemini response: " + text);
       }
 
       blogData = JSON.parse(jsonMatch[0]);
+
+      // Validate required fields
+      if (!blogData.selectedTitle || !blogData.content || !blogData.metaDescription) {
+        throw new Error("Missing required fields in AI response");
+      }
     } catch (parseError) {
       console.error("Failed to parse Gemini response:", text);
       const errorMsg =
@@ -102,15 +184,7 @@ Return your response in this EXACT JSON format (no markdown, no code blocks, jus
       return Response.json({ error: errorMsg }, { status: 500 });
     }
 
-    // 7. Validate blog data structure
-    if (!blogData.title || !blogData.content || !blogData.metaDescription) {
-      return Response.json(
-        { error: "Invalid blog data structure from AI" },
-        { status: 500 }
-      );
-    }
-
-    // 8. Get the first blog (create one if none exists)
+    // 7. Get the first blog (create one if none exists)
     const blogsResponse = await admin.graphql(
       `query {
         blogs(first: 1) {
@@ -182,10 +256,10 @@ Return your response in this EXACT JSON format (no markdown, no code blocks, jus
         variables: {
           article: {
             blogId: blogId,
-            title: blogData.title,
+            title: blogData.selectedTitle,
             body: blogData.content,
             summary: blogData.metaDescription,
-            tags: blogData.tags,
+            tags: blogData.tags || [],
             author: {
               name: "SEO Assistant",
             },
