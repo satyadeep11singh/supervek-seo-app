@@ -1,6 +1,17 @@
 import { type ActionFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { env } from "../env.server";
+import {
+  validateKeyword,
+  validateSecondaryKeywords,
+  validateSearchIntent,
+  validateTone,
+  validateAudienceLevel,
+  validateCountry,
+  validateWordCount,
+} from "../utils/validation.server";
+import { rateLimitCheck } from "../utils/rateLimit.server";
 
 interface BlogData {
   competitiveIntelligence: {
@@ -47,6 +58,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const { admin, session } = await authenticate.admin(request);
+  
+  // RATE LIMITING: Check if shop exceeded limits
+  const shop = session?.shop.replace(".myshopify.com", "") || "";
+  const rateLimitError = await rateLimitCheck(shop, 'blog-generation');
+  if (rateLimitError) {
+    return Response.json(
+      { error: rateLimitError },
+      { status: 429 } // Too Many Requests
+    );
+  }
 
   try {
     // 1. Get form data
@@ -59,24 +80,35 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const tone = formData.get("tone") as string;
     const wordCount = formData.get("wordCount") as string;
 
-    // 2. Validate input
-    if (!keyword?.trim()) {
+    // 2. VALIDATE ALL INPUTS - PREVENT PROMPT INJECTION
+    let validatedKeyword: string;
+    let validatedSecondaryKeywords: string;
+    let validatedSearchIntent: string;
+    let validatedTone: string;
+    let validatedAudienceLevel: string;
+    let validatedCountry: string;
+    let validatedWordCount: number;
+
+    try {
+      validatedKeyword = validateKeyword(keyword);
+      validatedSecondaryKeywords = validateSecondaryKeywords(secondaryKeywords);
+      validatedSearchIntent = validateSearchIntent(searchIntent);
+      validatedTone = validateTone(tone);
+      validatedAudienceLevel = validateAudienceLevel(audienceLevel);
+      validatedCountry = validateCountry(targetCountry);
+      validatedWordCount = validateWordCount(wordCount);
+    } catch (validationError) {
       return Response.json(
-        { error: "Keyword is required" },
+        { error: validationError instanceof Error ? validationError.message : "Invalid input" },
         { status: 400 }
       );
     }
 
-    // 3. Initialize Gemini AI
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error("GEMINI_API_KEY not set in environment");
-    }
-
-    const genAI = new GoogleGenerativeAI(apiKey);
+    // 3. Initialize Gemini AI with validated env
+    const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
 
-    // 4. Create comprehensive SEO prompt
+    // 4. Create comprehensive SEO prompt - USE VALIDATED VARIABLES ONLY
     const prompt = `# ELITE SEO CONTENT STRATEGIST & ARCHITECT
 
 You are an expert SEO strategist combining:
@@ -92,20 +124,20 @@ Your goal: Create a data-driven, strategically differentiated blog article desig
 INPUT PARAMETERS
 ═══════════════════════════════════════════════════════════
 
-PRIMARY KEYWORD: "${keyword}"
-SECONDARY KEYWORDS: ${secondaryKeywords || "Not specified"}
-SEARCH INTENT: ${searchIntent}
-TARGET AUDIENCE: ${audienceLevel}
-CONTENT TONE: ${tone}
-WORD COUNT TARGET: ${wordCount}+ words minimum
-TARGET COUNTRY: ${targetCountry}
+PRIMARY KEYWORD: "${validatedKeyword}"
+SECONDARY KEYWORDS: ${validatedSecondaryKeywords || "Not specified"}
+SEARCH INTENT: ${validatedSearchIntent}
+TARGET AUDIENCE: ${validatedAudienceLevel}
+CONTENT TONE: ${validatedTone}
+WORD COUNT TARGET: ${validatedWordCount}+ words minimum
+TARGET COUNTRY: ${validatedCountry}
 AUTHOR CREDENTIALS: Expert content strategist with 15+ years SEO experience
 
 ═══════════════════════════════════════════════════════════
 PHASE 1: COMPETITIVE INTELLIGENCE ANALYSIS
 ═══════════════════════════════════════════════════════════
 
-Analyze the competitive landscape for "${keyword}":
+Analyze the competitive landscape for "${validatedKeyword}":
 
 SERP ANALYSIS (Assume top 10 competitors):
 - Average word count: 2500-4500 words (estimate based on keyword type)
@@ -428,10 +460,6 @@ Return ONLY the JSON object with all fields populated. No markdown code blocks. 
         if (jsonError instanceof SyntaxError) {
           const match = jsonError.message.match(/position (\d+)/);
           const position = match ? parseInt(match[1]) : 0;
-          const context = jsonString.substring(
-            Math.max(0, position - 100),
-            Math.min(jsonString.length, position + 100)
-          );
           throw new Error(
             `Invalid JSON from AI at position ${position}. The AI response format was incorrect. Please try again.`
           );
@@ -460,13 +488,13 @@ Return ONLY the JSON object with all fields populated. No markdown code blocks. 
       }
 
       // Ensure articleContent exists and fallback to content if not
-      const articleContent = blogData.articleContent || (blogData as any).content;
+      const articleContent = blogData.articleContent || (blogData as Record<string, unknown>).content;
       if (!articleContent) {
         throw new Error(
           "No article content generated. Please try again."
         );
       }
-    } catch (parseError) {
+    } catch (parseError: unknown) {
       console.error("Failed to parse Gemini response:", text.substring(0, 1000));
       const errorMsg =
         parseError instanceof Error
@@ -532,7 +560,7 @@ Return ONLY the JSON object with all fields populated. No markdown code blocks. 
 
     // 9. Create article in Shopify
     console.log("Creating article in Shopify...");
-    const articleContent = blogData.articleContent || (blogData as any).content || "";
+    const articleContent = blogData.articleContent || (blogData as Record<string, unknown>).content || "";
     const articleSlug = blogData.urlSlug || blogData.selectedTitle
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")

@@ -3,6 +3,7 @@ import { useLoaderData, Link, useNavigate } from "react-router";
 import { authenticate } from "../shopify.server";
 import type { LoaderFunctionArgs } from "react-router";
 import prisma from "../db.server";
+import { safeJsonParse } from "../utils/validation.server";
 
 interface Topic {
   id: string;
@@ -30,7 +31,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     id: t.id,
     title: t.title,
     primaryKeyword: t.primaryKeyword,
-    secondaryKeywords: JSON.parse(t.secondaryKeywords),
+    secondaryKeywords: safeJsonParse(t.secondaryKeywords, []),
     searchIntent: t.searchIntent,
     contentAngle: t.contentAngle,
     targetAudience: t.targetAudience,
@@ -51,7 +52,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; border: string; text: string
 };
 
 export default function TopicsLibrary() {
-  const { topics, shop } = useLoaderData<typeof loader>();
+  const { topics } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -61,7 +62,7 @@ export default function TopicsLibrary() {
     ? topics.filter((t) => t.category === selectedCategory)
     : topics;
 
-  const useTopicAsKeyword = (topic: Topic) => {
+  const handleUseTopicAsKeyword = (topic: Topic) => {
     // Store the selected topic in sessionStorage to be picked up by the home page
     sessionStorage.setItem("selectedTopic", JSON.stringify({
       keyword: topic.primaryKeyword,
@@ -314,7 +315,7 @@ export default function TopicsLibrary() {
                     {isExpanded ? "Show Less" : "Show More"}
                   </button>
                   <button
-                    onClick={() => useTopicAsKeyword(topic)}
+                    onClick={() => handleUseTopicAsKeyword(topic)}
                     style={{
                       flex: 1,
                       padding: "0.5rem",

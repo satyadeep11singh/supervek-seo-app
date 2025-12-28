@@ -2,6 +2,8 @@ import { type ActionFunctionArgs, type LoaderFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import prisma from "../db.server";
+import { env } from "../env.server";
+import { rateLimitCheck } from "../utils/rateLimit.server";
 
 interface TopicResearch {
   title: string;
@@ -40,9 +42,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const { session } = await authenticate.admin(request);
   const shop = session?.shop.replace(".myshopify.com", "") || "";
 
+  // RATE LIMITING
+  const rateLimitError = await rateLimitCheck(shop, 'research-topics');
+  if (rateLimitError) {
+    return Response.json(
+      { error: rateLimitError },
+      { status: 429 }
+    );
+  }
+
   try {
-    // Initialize Gemini AI
-    const apiKey = process.env.GEMINI_API_KEY;
+    // Initialize Gemini AI with validated env
+    const apiKey = env.GEMINI_API_KEY;
     if (!apiKey) {
       throw new Error("GEMINI_API_KEY not set");
     }

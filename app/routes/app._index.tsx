@@ -3,6 +3,7 @@ import { useFetcher, useLoaderData, Link } from "react-router";
 import { authenticate } from "../shopify.server";
 import type { LoaderFunctionArgs } from "react-router";
 import prisma from "../db.server";
+import { safeJsonParse } from "../utils/validation.server";
 import { TYPOGRAPHY_STYLES, buttonHoverEffect, cardHoverEffect } from "../utils/typography";
 
 interface Suggestion {
@@ -112,13 +113,21 @@ export default function Index() {
     const selectedTopic = sessionStorage.getItem("selectedTopic");
     if (selectedTopic) {
       try {
-        const { keyword: topicKeyword, secondaryKeywords: topicSecondaryKeywords } = JSON.parse(selectedTopic);
+        const parsed = safeJsonParse(selectedTopic, null);
+        if (!parsed || typeof parsed !== 'object' || !('keyword' in parsed)) {
+          console.error('Invalid stored topic data');
+          sessionStorage.removeItem('selectedTopic');
+          return;
+        }
+        
+        const { keyword: topicKeyword, secondaryKeywords: topicSecondaryKeywords } = parsed as { keyword: string; secondaryKeywords: string };
         setKeyword(topicKeyword);
         setSecondaryKeywords(topicSecondaryKeywords);
         // Clear the stored data after using it
         sessionStorage.removeItem("selectedTopic");
       } catch (e) {
         console.error("Error parsing selected topic:", e);
+        sessionStorage.removeItem("selectedTopic");
       }
     }
   }, []);
@@ -173,7 +182,7 @@ export default function Index() {
     }
   };
 
-  const useSuggestion = (suggestion: Suggestion) => {
+  const handleUseSuggestion = (suggestion: Suggestion) => {
     setKeyword(suggestion.primaryKeyword);
     setSecondaryKeywords(suggestion.secondaryKeywords.join(", "));
   };
@@ -279,7 +288,7 @@ export default function Index() {
           <div style={{ marginBottom: "2rem" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
               <h3 style={{ ...TYPOGRAPHY_STYLES.headingSubsection, margin: "0" }}>
-                💡 Today's Recommended Topics
+                💡 Today&apos;s Recommended Topics
               </h3>
               <Link
                 to="/app/topics-library"
@@ -318,7 +327,7 @@ export default function Index() {
                       <strong>Keyword:</strong> {suggestion.primaryKeyword}
                     </p>
                     <button
-                      onClick={() => useSuggestion(suggestion)}
+                      onClick={() => handleUseSuggestion(suggestion)}
                       style={{
                         width: "100%",
                         ...TYPOGRAPHY_STYLES.buttonSecondary,
@@ -348,7 +357,7 @@ export default function Index() {
                   <s-text-field
                     label="Primary Keyword"
                     value={keyword}
-                    onChange={(e: any) => setKeyword(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)}
                     placeholder="e.g., sustainable fashion"
                     helpText="The main topic your article will rank for"
                   />
@@ -356,7 +365,7 @@ export default function Index() {
                   <s-text-field
                     label="Secondary Keywords"
                     value={secondaryKeywords}
-                    onChange={(e: any) => setSecondaryKeywords(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSecondaryKeywords(e.target.value)}
                     placeholder="e.g., eco-friendly clothing, ethical fashion brands"
                     helpText="Comma-separated keywords and related topics"
                   />
@@ -368,10 +377,11 @@ export default function Index() {
                 <h3 style={{ ...TYPOGRAPHY_STYLES.headingSubsection, marginBottom: "1rem" }}>SEO Settings</h3>
                 <s-stack direction="block" gap="base">
                   <div>
-                    <label style={{ ...TYPOGRAPHY_STYLES.label, display: "block", marginBottom: "0.5rem" }}>
+                    <label style={{ ...TYPOGRAPHY_STYLES.label, display: "block", marginBottom: "0.5rem" }} htmlFor="search-intent-select">
                       Search Intent
                     </label>
                     <select
+                      id="search-intent-select"
                       style={{
                         padding: "0.75rem",
                         border: "1px solid #d1d5db",
@@ -394,10 +404,11 @@ export default function Index() {
                   </div>
 
                   <div>
-                    <label style={{ ...TYPOGRAPHY_STYLES.label, display: "block", marginBottom: "0.5rem" }}>
+                    <label style={{ ...TYPOGRAPHY_STYLES.label, display: "block", marginBottom: "0.5rem" }} htmlFor="target-country-select">
                       Target Country
                     </label>
                     <select
+                      id="target-country-select"
                       style={{
                         padding: "0.75rem",
                         border: "1px solid #d1d5db",
@@ -429,10 +440,11 @@ export default function Index() {
                 <h3 style={{ ...TYPOGRAPHY_STYLES.headingSubsection, marginBottom: "1rem" }}>Audience & Voice</h3>
                 <s-stack direction="block" gap="base">
                   <div>
-                    <label style={{ ...TYPOGRAPHY_STYLES.label, display: "block", marginBottom: "0.5rem" }}>
-                      Target Audience Level
+                    <label style={{ ...TYPOGRAPHY_STYLES.label, display: "block", marginBottom: "0.5rem" }} htmlFor="audience-level-select">
+                      Audience Level
                     </label>
                     <select
+                      id="audience-level-select"
                       style={{
                         padding: "0.75rem",
                         border: "1px solid #d1d5db",
@@ -454,10 +466,11 @@ export default function Index() {
                   </div>
 
                   <div>
-                    <label style={{ ...TYPOGRAPHY_STYLES.label, display: "block", marginBottom: "0.5rem" }}>
+                    <label style={{ ...TYPOGRAPHY_STYLES.label, display: "block", marginBottom: "0.5rem" }} htmlFor="tone-style-select">
                       Tone & Voice
                     </label>
                     <select
+                      id="tone-style-select"
                       style={{
                         padding: "0.75rem",
                         border: "1px solid #d1d5db",
@@ -487,7 +500,7 @@ export default function Index() {
                   label="Word Count"
                   type="number"
                   value={wordCount}
-                  onChange={(e: any) => setWordCount(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWordCount(e.target.value)}
                   min="1500"
                   max="5000"
                   helpText="Minimum 1,500 words for comprehensive SEO content"

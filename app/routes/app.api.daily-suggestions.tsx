@@ -1,6 +1,7 @@
 import { type LoaderFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
 import prisma from "../db.server";
+import { safeJsonParse } from "../utils/validation.server";
 
 interface Topic {
   id: string;
@@ -47,7 +48,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         id: topic.id,
         title: topic.title,
         primaryKeyword: topic.primaryKeyword,
-        secondaryKeywords: JSON.parse(topic.secondaryKeywords),
+        secondaryKeywords: safeJsonParse(topic.secondaryKeywords, []),
         category: topic.category,
       });
     }
