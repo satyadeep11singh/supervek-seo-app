@@ -1,7 +1,7 @@
 import { type LoaderFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
 import prisma from "../db.server";
-import { safeJsonParse } from "../utils/validation.server";
+import { safeJsonParse } from "../utils/parse";
 
 interface Topic {
   id: string;

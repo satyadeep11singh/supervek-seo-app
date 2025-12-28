@@ -3,7 +3,7 @@ import { useLoaderData, Link, useNavigate } from "react-router";
 import { authenticate } from "../shopify.server";
 import type { LoaderFunctionArgs } from "react-router";
 import prisma from "../db.server";
-import { safeJsonParse } from "../utils/validation.server";
+import { safeJsonParse } from "../utils/parse";
 
 interface Topic {
   id: string;
