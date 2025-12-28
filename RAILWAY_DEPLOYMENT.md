@@ -36,7 +36,7 @@ Add these environment variables:
 | `SHOPIFY_API_KEY` | Your Shopify API Key | Shopify Partner Dashboard |
 | `SHOPIFY_API_SECRET` | Your Shopify API Secret | Shopify Partner Dashboard |
 | `SHOPIFY_APP_URL` | `https://supervek-seo-app-production.up.railway.app` | Railway Dashboard |
-| `SCOPES` | `write_products,write_content,read_content` | Manual (from shopify.app.toml) |
+| `SHOPIFY_API_SCOPE` | `write_products,write_content,read_content` | Manual (from shopify.app.toml) |
 | `GEMINI_API_KEY` | Your Google Gemini API Key | Google AI Studio |
 | `DATABASE_URL` | Automatically generated | Railway PostgreSQL plugin |
 
@@ -63,7 +63,7 @@ Once all environment variables are configured:
 
 ## Troubleshooting
 
-### Error: "Missing required environment variables: SCOPES"
+### Error: "Missing required environment variables: SHOPIFY_API_SCOPE"
 
 **Cause**: Environment variables not set in Railway dashboard
 
@@ -90,7 +90,7 @@ Once all environment variables are configured:
 1. Check Railway deployment logs in dashboard
 2. Verify all environment variables are set (see step 2 above)
 3. Verify DATABASE_URL points to a PostgreSQL database
-4. Confirm SCOPES environment variable is set to: `write_products,write_content,read_content`
+4. Confirm SHOPIFY_API_SCOPE environment variable is set to: `write_products,write_content,read_content`
 
 ## Local Development
 

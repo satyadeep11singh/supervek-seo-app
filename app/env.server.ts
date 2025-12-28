@@ -7,7 +7,7 @@ const requiredEnvVars = [
   'SHOPIFY_APP_URL',
   'GEMINI_API_KEY',
   'DATABASE_URL',
-  'SCOPES',
+  'SHOPIFY_API_SCOPE',
 ] as const;
 
 type EnvVar = typeof requiredEnvVars[number];
@@ -40,7 +40,7 @@ export const env = {
   SHOPIFY_APP_URL: process.env.SHOPIFY_APP_URL!,
   GEMINI_API_KEY: process.env.GEMINI_API_KEY!,
   DATABASE_URL: process.env.DATABASE_URL!,
-  SCOPES: process.env.SCOPES!,
+  SHOPIFY_API_SCOPE: process.env.SHOPIFY_API_SCOPE!,
   SHOP_CUSTOM_DOMAIN: process.env.SHOP_CUSTOM_DOMAIN,
   NODE_ENV: process.env.NODE_ENV || 'development',
 } as const;
