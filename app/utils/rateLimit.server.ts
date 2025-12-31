@@ -2,7 +2,7 @@
 // Rate limiting to prevent API abuse and DoS attacks
 
 const RATE_LIMITS = {
-  'blog-generation': { max: 5, windowMs: 60 * 60 * 1000 }, // 5 per hour
+  'blog-generation': { max: 10, windowMs: 60 * 60 * 1000 }, // 10 per hour
   'research-topics': { max: 2, windowMs: 24 * 60 * 60 * 1000 }, // 2 per day
 } as const;
 
