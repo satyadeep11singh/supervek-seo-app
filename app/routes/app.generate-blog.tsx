@@ -13,6 +13,28 @@ import {
 } from "../utils/validation.server";
 import { rateLimitCheck } from "../utils/rateLimit.server";
 
+// Helper function to fetch and parse sitemap URLs
+async function fetchSitemapUrls(
+  sitemapUrl: string
+): Promise<string[]> {
+  try {
+    const response = await fetch(sitemapUrl);
+    if (!response.ok) return [];
+    const text = await response.text();
+    
+    // Extract all <loc> tags from the XML
+    const urlMatches = text.match(/<loc>([^<]+)<\/loc>/g);
+    if (!urlMatches) return [];
+    
+    return urlMatches
+      .map((match) => match.replace(/<\/?loc>/g, ""))
+      .filter((url) => url.includes("supervek.in"));
+  } catch (error) {
+    console.error(`Error fetching sitemap ${sitemapUrl}:`, error);
+    return [];
+  }
+}
+
 interface BlogData {
   competitiveIntelligence: {
     avgWordCount: string;
@@ -38,6 +60,7 @@ interface BlogData {
     originalElements: string[];
   };
   internalLinkingSuggestions: string[];
+  productCollectionLinks?: string[];
   externalLinkingSuggestions: string[];
   imageRequirements: string[];
   technicalSEOChecklist: {
@@ -108,6 +131,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
 
+    // 3.5 Fetch product and collection URLs from sitemaps for internal linking
+    console.log("Fetching product and collection URLs from sitemaps...");
+    const [productUrls, collectionUrls] = await Promise.all([
+      fetchSitemapUrls("https://supervek.in/sitemap_products_1.xml"),
+      fetchSitemapUrls("https://supervek.in/sitemap_collections_1.xml"),
+    ]);
+    
+    // Format URLs for the prompt (take a sample of each for context)
+    const productSample = productUrls.slice(0, 10).join("\n    ");
+    const collectionSample = collectionUrls.slice(0, 5).join("\n    ");
+    
+    console.log(
+      `Fetched ${productUrls.length} product URLs and ${collectionUrls.length} collection URLs`
+    );
+
     // 4. Create comprehensive SEO prompt - USE VALIDATED VARIABLES ONLY
     const prompt = `# ELITE SEO CONTENT STRATEGIST & ARCHITECT
 
@@ -166,7 +204,33 @@ Define UNIQUE VALUE. Use 2+ of these:
 ✓ Exceptional depth on one critical subtopic
 
 ═══════════════════════════════════════════════════════════
-PHASE 3: SEMANTIC ENTITY & NLP OPTIMIZATION
+PHASE 2B: SUPERVEK PRODUCT & COLLECTION INTERNAL LINKING
+═══════════════════════════════════════════════════════════
+
+AVAILABLE INTERNAL LINKS FROM SUPERVEK STORE:
+
+SAMPLE PRODUCT URLS (use contextually relevant ones):
+${productSample}
+
+SAMPLE COLLECTION URLS (use contextually relevant ones):
+${collectionSample}
+
+INTERNAL LINKING STRATEGY:
+✓ Link 2-3 relevant PRODUCTS when discussing specific items, styles, or solutions
+✓ Link 1-2 relevant COLLECTIONS when discussing product categories
+✓ Use natural, contextual anchor text (e.g., "Fanny Pack collection", "Carbon Black Slinger")
+✓ Anchor text must match product/collection name or relevant keyword variation
+✓ Distribute links naturally throughout article (not all in one section)
+✓ Link to products that solve the reader's problem mentioned in the blog
+✓ Example: "For campus carry, the [Carbon Black Slinger collection](link) provides..."
+✓ Example: "Check out our [Fanny Packs collection](link) for various styles..."
+
+LINKING RULES:
+- NEVER force a product link where it doesn't fit contextually
+- Links should enhance reader experience and provide solution
+- Maximum 3-4 product/collection links per article
+- Prioritize high-relevance products/collections over forcing all links
+- Use descriptive anchor text with keywords when possible
 ═══════════════════════════════════════════════════════════
 
 Include 10-15 core entities Google expects:
@@ -467,7 +531,17 @@ FINAL OUTPUT (JSON ONLY - NO MARKDOWN BLOCKS, NO EXTRA TEXT)
     "Link [Pillar page title] with anchor '[keyword variation]' - appears in [specific section] for context",
     "Link [Related cluster article] with anchor '[specific subtopic phrase]' - cross-linking with related content",
     "Link [Supporting guide] with anchor '[descriptive phrase]' - for deeper reader exploration",
-    "Link [Foundational article] with anchor '[terminology]' - helping readers understand prerequisites"
+    "Link [Foundational article] with anchor '[terminology]' - helping readers understand prerequisites",
+    "Link [Supervek Product/Collection] with anchor '[product name/category]' from provided URLs - contextually relevant solution for reader"
+  ],
+
+  "productCollectionLinks": [
+    "Use 2-3 contextually relevant PRODUCT links from the provided Supervek product URLs",
+    "Use 1-2 contextually relevant COLLECTION links from the provided Supervek collection URLs",
+    "Example: When discussing college carry options, link to relevant fanny pack products/collections",
+    "Example: When discussing wallet materials, link to relevant wallet collections or specific wallet products",
+    "Example: When discussing headwear styles, link to relevant cap/hat collections or specific designs",
+    "Only link products/collections that solve a problem mentioned in the blog content"
   ],
 
   "externalLinkingSuggestions": [
