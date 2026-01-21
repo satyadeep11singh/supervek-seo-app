@@ -13,14 +13,41 @@ import {
 } from "../utils/validation.server";
 import { rateLimitCheck } from "../utils/rateLimit.server";
 
-// Helper function to fetch and parse sitemap URLs
+// Helper function to fetch and parse sitemap URLs - with SSRF protection
 async function fetchSitemapUrls(
   sitemapUrl: string
 ): Promise<string[]> {
   try {
-    const response = await fetch(sitemapUrl);
+    // SECURITY: Validate URL is HTTPS and on supervek.in domain only
+    const url = new URL(sitemapUrl);
+    if (url.hostname !== 'supervek.in') {
+      console.error(`Security: Invalid sitemap URL hostname: ${url.hostname}`);
+      return [];
+    }
+    if (url.protocol !== 'https:') {
+      console.error('Security: Invalid sitemap URL protocol (must be HTTPS)');
+      return [];
+    }
+
+    // SECURITY: Add timeout to prevent hanging requests (5 seconds)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const response = await fetch(sitemapUrl, {
+      signal: controller.signal,
+      headers: { 'User-Agent': 'Supervek-SEO-App/1.0' },
+    });
+    
+    clearTimeout(timeoutId);
+    
     if (!response.ok) return [];
+    
+    // SECURITY: Limit response size to 5MB to prevent DoS
     const text = await response.text();
+    if (text.length > 5 * 1024 * 1024) {
+      console.error('Security: Sitemap response too large');
+      return [];
+    }
     
     // Extract all <loc> tags from the XML
     const urlMatches = text.match(/<loc>([^<]+)<\/loc>/g);
@@ -30,7 +57,14 @@ async function fetchSitemapUrls(
       .map((match) => match.replace(/<\/?loc>/g, ""))
       .filter((url) => url.includes("supervek.in"));
   } catch (error) {
-    console.error(`Error fetching sitemap ${sitemapUrl}:`, error);
+    // SECURITY: Don't expose full error details - log safely
+    if (error instanceof Error) {
+      if (error.name === 'AbortError') {
+        console.warn('Sitemap fetch timeout (security: request aborted after 5s)');
+      } else {
+        console.error('Sitemap fetch error:', error.name);
+      }
+    }
     return [];
   }
 }
@@ -132,7 +166,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
 
     // 3.5 Fetch product and collection URLs from sitemaps for internal linking
-    console.log("Fetching product and collection URLs from sitemaps...");
+    const isDev = env.NODE_ENV === 'development';
+    if (isDev) console.log("Fetching product and collection URLs from sitemaps...");
+    
     const [productUrls, collectionUrls] = await Promise.all([
       fetchSitemapUrls("https://supervek.in/sitemap_products_1.xml"),
       fetchSitemapUrls("https://supervek.in/sitemap_collections_1.xml"),
@@ -142,9 +178,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const productSample = productUrls.slice(0, 10).join("\n    ");
     const collectionSample = collectionUrls.slice(0, 5).join("\n    ");
     
-    console.log(
-      `Fetched ${productUrls.length} product URLs and ${collectionUrls.length} collection URLs`
-    );
+    if (isDev) {
+      console.log(
+        `Fetched ${productUrls.length} product URLs and ${collectionUrls.length} collection URLs`
+      );
+    }
 
     // 4. Create comprehensive SEO prompt - USE VALIDATED VARIABLES ONLY
     const prompt = `# ELITE SEO CONTENT STRATEGIST & ARCHITECT
@@ -633,6 +671,20 @@ Return ONLY the JSON object with all fields populated. No markdown code blocks. 
 
     // 5. Call Gemini API
     console.log("Calling Gemini API...");
+    
+    // SECURITY: Validate prompt size to prevent token exhaustion
+    const estimatedTokens = Math.ceil(prompt.length / 4); // Rough estimate: ~4 chars per token
+    const MAX_TOKENS = 100000;
+    
+    if (estimatedTokens > MAX_TOKENS) {
+      return Response.json(
+        { 
+          error: `Request too large (estimated ${estimatedTokens} tokens, max ${MAX_TOKENS}). Reduce keyword or secondary keyword length.` 
+        },
+        { status: 413 } // Payload Too Large
+      );
+    }
+    
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
