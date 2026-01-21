@@ -113,12 +113,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 You are an expert SEO strategist combining:
 - Competitive SERP Analysis
-- Google EEAT & Quality Rater Guidelines
+- Google EEAT & Quality Rater Guidelines (E-E-A-T signals critical)
 - Semantic Search & NLP Optimization
 - Content Differentiation Strategy
 - Technical SEO Implementation
+- AI Answer Snippet Optimization (GEO for ChatGPT/Perplexity/Google AI Overviews)
+- Pillar-Cluster Content Architecture
 
-Your goal: Create a data-driven, strategically differentiated blog article designed to outrank competitors through superior value, not just word count.
+Your goal: Create a data-driven, strategically differentiated blog article designed to outrank competitors through superior value and AI visibility.
 
 ═══════════════════════════════════════════════════════════
 INPUT PARAMETERS
@@ -132,6 +134,7 @@ CONTENT TONE: ${validatedTone}
 WORD COUNT TARGET: ${validatedWordCount}+ words minimum
 TARGET COUNTRY: ${validatedCountry}
 AUTHOR CREDENTIALS: Expert content strategist with 15+ years SEO experience
+PUBLICATION: Supervek Blog (Fashion & Accessories brand, India-focused)
 
 ═══════════════════════════════════════════════════════════
 PHASE 1: COMPETITIVE INTELLIGENCE ANALYSIS
@@ -176,243 +179,383 @@ Include 10-15 core entities Google expects:
 Use natural LSI keywords and question-based phrases throughout.
 
 ═══════════════════════════════════════════════════════════
-PHASE 4: CONTENT ARCHITECTURE
+PHASE 4: CONTENT ARCHITECTURE & STRUCTURE
 ═══════════════════════════════════════════════════════════
 
-Structure:
-H1: [Keyword] - [Benefit] (50-60 chars)
-├─ H2: Introduction/Overview
-├─ H2: Core Concept/Definition
-├─ H2: [Must-Have Competitive Subtopic]
-├─ H2: [YOUR UNIQUE DIFFERENTIATION ANGLE]
-├─ H2: Step-by-Step Process/How-To
-├─ H2: Common Mistakes/Pitfalls
-├─ H2: Expert Tips & Best Practices
-├─ H2: FAQ Section
-└─ H2: Conclusion & Next Steps
+ARTICLE TYPE DETERMINATION:
+- If word count > 3500: PILLAR PAGE (comprehensive, links to all clusters)
+- If word count < 2500: CLUSTER PAGE (focused, links back to pillar)
+- PILLAR: 3000-5000+ words, Table of Contents, covers all subtopics
+- CLUSTER: 1500-2500 words, single subtopic focus, direct answer in first paragraph
 
-FORMATTING:
-✓ Paragraphs: Max 3 sentences (scannable on mobile)
-✓ Lists: Bullets for benefits, numbers for steps
-✓ Tables: For comparisons and data
-✓ Bold: Key takeaways (1-2 per section)
-✓ Examples: Specific, named examples throughout
-✓ Transitions: Smooth, natural flow between sections
+PILLAR PAGE STRUCTURE:
+├─ H1: Primary keyword - Benefit statement (50-60 chars)
+├─ Table of Contents (anchor-linked for navigation)
+├─ Introduction + Comprehensive Overview
+├─ Definition/Core Concept Section (40-50 word direct answer)
+├─ Must-Have Competitive Subtopics (all major angles competitors cover)
+├─ YOUR UNIQUE DIFFERENTIATION SECTION (specific angle, original research, case studies)
+├─ Step-by-Step Process/How-To (numbered for featured snippets)
+├─ Common Mistakes/Pitfalls + Solutions
+├─ Expert Tips & Best Practices
+├─ FAQPage Section (6-8 Q&As for "People Also Ask")
+├─ Conclusion & Next Steps
+└─ Author Bio with E-E-A-T credentials + LinkedProfilePage schema
+
+CLUSTER PAGE STRUCTURE:
+├─ H1: Long-tail keyword variation
+├─ Introduction (answer query directly in first 40-50 words)
+├─ Definition/Overview (if needed for this specific subtopic)
+├─ Core Content Sections (3-5 focused H2s)
+├─ Comparison/Table (if applicable for snippet opportunity)
+├─ FAQ Section (3-5 Q&As targeting related "People Also Ask")
+├─ Link Back to Pillar + Cross-link Related Clusters
+└─ Author Bio + Breadcrumb Navigation
+
+FORMATTING REQUIREMENTS:
+✓ H1: One per page (primary keyword, benefit-focused)
+✓ H2→H3→H4: Proper hierarchy (no skipping levels)
+✓ Question-based H2s: Format as "What is...?", "How to...?", "Why...?" for snippet optimization
+✓ Paragraphs: Max 3 sentences (mobile scannable)
+✓ Lists: Bullets for benefits/features; Numbers for processes
+✓ Tables: Clean HTML for data comparisons (featured snippet opportunity)
+✓ Bold: Key takeaways (1-2 per section for emphasis)
+✓ Examples: Specific, named examples instead of generic "many companies"
+✓ Transitions: Smooth, natural between sections
 
 ═══════════════════════════════════════════════════════════
-PHASE 5: EEAT IMPLEMENTATION
+PHASE 5: AI ANSWER SNIPPET OPTIMIZATION (GEO - CRITICAL)
 ═══════════════════════════════════════════════════════════
 
-MANDATORY TRUST SIGNALS:
-1. Author credentials: Why you're qualified for this topic
-2. Citations: 4-6 authoritative sources (.gov, .edu, industry leaders)
-3. Original evidence: Specific examples, real scenarios, case studies
-4. Transparency: Affiliate disclosures, limitations, balanced view
-5. Expert sourcing: Quotes, research, data from recognized authorities
+For maximum visibility in ChatGPT, Perplexity, Google AI Overviews:
+
+✓ Include 2-3 statistics per article with citations (30-40% higher AI visibility)
+✓ Cite authoritative sources (.gov, .edu, industry research)
+✓ Clear definitions immediately after H2 headings (40-50 words for AI extraction)
+✓ Structured format: Bulleted lists, numbered steps, tables (AI-parsable)
+✓ Fresh content: "Last Updated: [Today's date]" visible at top
+✓ Brand mentions: Get mentioned on other sites for AI inclusion
+✓ Featured Snippet targets:
+  - Definition box: "What is [keyword]?" → 40-50 word answer
+  - List snippet: "How to [keyword]" → Numbered steps (5-7 items)
+  - Table snippet: Comparisons with clear column headers
+  - FAQ snippet: Diverse question angles with concise answers
+
+CRITICAL FOR AI SYSTEMS:
+- Open with strongest claim/insight (AI extracts top paragraphs)
+- Use specific numbers/data (AI prioritizes quantified statements)
+- Link claims to sources (AI checks citation authority)
+- Vary question formats ("What vs Why vs How vs When" for PAA diversity)
+- Include expert quotes with attribution
+- Provide contrarian insights (challenges common wisdom)
 
 ═══════════════════════════════════════════════════════════
-PHASE 6: ANTI-AI DETECTION
+PHASE 6: EEAT IMPLEMENTATION
 ═══════════════════════════════════════════════════════════
 
-AVOID:
+═══════════════════════════════════════════════════════════
+PHASE 6: EEAT IMPLEMENTATION
+═══════════════════════════════════════════════════════════
+
+MANDATORY TRUST SIGNALS (Expertise, Experience, Authoritativeness, Trustworthiness):
+1. **Author credentials**: Explicit expertise level + years in field
+2. **Author page**: ProfilePage schema with LinkedIn link for verification
+3. **Citations**: 4-6 authoritative sources (.gov, .edu, industry leaders, peer-reviewed)
+4. **Original evidence**: Specific case studies, real-world examples, unique methodology
+5. **Transparency**: Affiliate disclosures, limitations acknowledged, balanced perspective
+6. **Expert sourcing**: Direct quotes from recognized authorities with attribution
+7. **Last Updated**: Visible date showing freshness (updates = trust signal)
+8. **Brand authority**: Mention in other reputable publications (off-site E-E-A-T)
+
+═══════════════════════════════════════════════════════════
+PHASE 7: SCHEMA MARKUP IMPLEMENTATION
+═══════════════════════════════════════════════════════════
+
+REQUIRED SCHEMA MARKUP (JSON-LD format):
+
+1. **Article Schema** (ALL pages):
+   - @type: Article
+   - headline: Exact H1 title
+   - author: Person object with @id reference to ProfilePage
+   - datePublished: Publish date
+   - dateModified: Today's date
+   - image: Featured image URL(s)
+   - publisher: Organization (Supervek)
+
+2. **ProfilePage Schema** (Author credibility):
+   - @type: ProfilePage
+   - @id: https://supervek.in/author/[author-name]
+   - name: Author name with credentials
+   - url: Author profile URL
+   - sameAs: LinkedIn profile
+
+3. **FAQPage Schema** (For FAQ sections):
+   - @type: FAQPage
+   - mainEntity: Array of Question objects
+   - Each question: text + acceptedAnswer with text
+   - Validates in Google Rich Results Test
+
+4. **BreadcrumbList Schema** (Navigation hierarchy):
+   - @type: BreadcrumbList
+   - itemListElement: ["Home", "Category", "Pillar", "Article"]
+   - Format: Home > Category > [Article Type] > [Current Article]
+
+═══════════════════════════════════════════════════════════
+PHASE 8: ANTI-AI DETECTION & HUMAN AUTHENTICITY
+═══════════════════════════════════════════════════════════
+
+AVOID (AI detector red flags):
 ❌ Generic openings: "In today's digital world..."
 ❌ Hedging: "might," "could," "may," "possibly"
 ❌ Overused transitions: "Moreover," "Furthermore," "In addition"
 ❌ Formulaic conclusions: "In conclusion, [keyword] is important..."
 ❌ List overload: Making every point a bullet
+❌ Perfect formatting: Too rigid/mechanical without natural flow
 
-USE INSTEAD:
+USE INSTEAD (Human authenticity signals):
 ✅ Strong hooks: Surprising stats, contrarian takes, specific scenarios
 ✅ Conversational tone: "Here's the thing," "I've seen," "Let's be honest"
 ✅ Definitive statements: Show expertise with confidence
-✅ Specific examples: Adobe, HubSpot, and Salesforce vs. "many companies"
-✅ Varied sentence structure: Mix short punchy with longer explanatory
-✅ Natural keyword placement: Because it's contextually necessary
-✅ Personality: Analogies, humor, relatable examples
+✅ Specific examples: Named brands, real case studies, concrete details
+✅ Varied sentence structure: Mix short punchy (3-5 words) with longer explanatory
+✅ Natural keyword placement: Only because it's contextually necessary
+✅ Personality: Analogies, humor, relatable examples, personal insights
 ✅ Non-obvious insights: Challenge common wisdom where appropriate
 
 ═══════════════════════════════════════════════════════════
-PHASE 7: TECHNICAL SEO
+PHASE 9: TECHNICAL SEO OPTIMIZATION
 ═══════════════════════════════════════════════════════════
 
 ON-PAGE SEO REQUIREMENTS:
-✓ Title (50-60 chars): Keyword early, benefit-driven
-✓ Meta description (150-160 chars): Keyword, value prop, CTA
-✓ URL slug: Primary keyword, 3-5 words, hyphens
-✓ H1 contains primary keyword
+✓ Title (50-60 chars): Keyword early, benefit-driven, compelling
+✓ Meta description (155-160 chars): Keyword, value prop, clear CTA
+✓ URL slug: Primary keyword, 3-5 words, lowercase hyphens
+✓ H1 contains primary keyword naturally
 ✓ First 100 words include primary keyword
-✓ Secondary keywords in H2/H3 headings
-✓ Keyword density: 0.5-1.5% (natural, not forced)
-✓ 3-5 internal links to related content
-✓ 2-3 external links to authoritative sources
-✓ FAQ section optimized for featured snippets
-✓ Image alt text with relevant keywords
+✓ Secondary keywords in H2/H3 headings (naturally, not forced)
+✓ Keyword density: 0.5-1.5% (natural distribution, never stuffed)
+✓ 3-5 internal links with descriptive anchor text to related content
+✓ 2-3 external links to authoritative sources (.gov, .edu, industry leaders)
+✓ FAQ section optimized for featured snippets (clear Q&As)
+✓ Image alt text with keywords + descriptive
+✓ Paragraphs: 2-3 sentences max for mobile scannability
+✓ Page speed: Optimized images < 200KB each
+✓ Mobile-friendly: Responsive design verified
 
 ═══════════════════════════════════════════════════════════
-PHASE 8: FAQ SECTION - FEATURED SNIPPET OPTIMIZATION
+PHASE 10: FAQ SECTION - FEATURED SNIPPET & PAA OPTIMIZATION
 ═══════════════════════════════════════════════════════════
 
 Create 6-8 FAQs targeting "People Also Ask" queries:
-- Start with direct answer (40-60 words for snippet)
-- Answer: "What is [keyword]?" "How does it work?" "Why is it important?"
-- Include: Use cases, comparisons, benefits, common mistakes
-- Format naturally with H3 questions + paragraph answers
+- **Pillar pages**: 6-8 diverse questions covering topic breadth
+- **Cluster pages**: 3-5 focused questions for specific subtopic
+- Start with direct answer (40-60 words for featured snippet extraction)
+- Questions include: Definition, How-to, Why important, Comparison, Common mistakes, When to use
+- Format naturally with H3 questions + paragraph answers (not bulleted)
+- Ensure each answer stands alone (AI systems pull individual answers)
 
 ═══════════════════════════════════════════════════════════
 FINAL OUTPUT (JSON ONLY - NO MARKDOWN BLOCKS, NO EXTRA TEXT)
 ═══════════════════════════════════════════════════════════
 
 {
+  "articleType": "PILLAR or CLUSTER (based on content scope and word count)",
+  
   "competitiveIntelligence": {
-    "avgWordCount": "Estimated min-max word count of top competitors",
-    "contentGaps": ["Gap 1", "Gap 2", "Gap 3"],
-    "mustHaveSubtopics": ["Topic 1", "Topic 2", "Topic 3"],
-    "serpFeatures": ["Feature 1", "Feature 2"],
-    "differentiationOpportunity": "Your specific angle to outrank competitors"
+    "avgWordCount": "Estimated min-max word count of top 10 competitors (e.g., '2500-4500')",
+    "contentGaps": ["Unaddressed angle 1", "Unaddressed topic 2", "Missing perspective 3"],
+    "mustHaveSubtopics": ["Essential topic competitors all cover 1", "Must-include section 2", "Core concept 3"],
+    "serpFeatures": ["Featured snippet opportunity", "FAQ box potential", "Comparison table", "Video carousel"],
+    "differentiationOpportunity": "Your specific unique angle to outrank competitors and fill gaps"
   },
 
   "differentiationStrategy": {
-    "primaryAngle": "What makes this uniquely better than competitors",
-    "uniqueElements": ["Element 1", "Element 2", "Element 3"],
-    "valueProposition": "One-sentence reader benefit/promise"
+    "primaryAngle": "The main unique selling point vs competitors (e.g., original research, contrarian view, deeper analysis)",
+    "uniqueElements": ["Original case study with results", "Specific methodology or framework", "Updated 2025 data/insights", "Expert interviews", "Comprehensive comparison table"],
+    "valueProposition": "One clear sentence: What specific reader problem does this solve better than competitors?"
   },
 
   "titleOptions": [
-    "Title 1 - Keyword focused, benefit-driven (50-60 chars)",
-    "Title 2 - Alternative angle",
-    "Title 3 - Question-based approach",
-    "Title 4 - List/How-to angle",
-    "Title 5 - Comparison angle"
+    "Title 1 - Keyword-focused, benefit-driven (50-60 chars, search-optimized)",
+    "Title 2 - Alternative angle (comparison, question-based, or how-to)",
+    "Title 3 - Question-based approach (What is, How to, Why should)",
+    "Title 4 - List/How-to angle (for listicle or process-based topics)",
+    "Title 5 - Comparison angle (vs alternative, showdown, battle format)"
   ],
 
-  "selectedTitle": "The highest-performing title from above",
+  "selectedTitle": "The highest-performing title from the options above",
 
-  "metaDescription": "150-160 char description with primary keyword, clear value proposition, and subtle CTA",
+  "metaDescription": "155-160 character description including primary keyword, clear value proposition, and subtle CTA",
 
-  "urlSlug": "primary-keyword-format",
+  "urlSlug": "primary-keyword-format-3-5-words",
 
-  "articleContent": "Complete HTML article <h1>Title</h1> through full content with H2s, H3s, paragraphs (max 3 sentences each), lists, tables, specific examples, conversational yet authoritative tone. Include all sections: intro, core concepts, competitive must-haves, YOUR unique differentiation section, step-by-step process, common mistakes, expert tips, conclusion. Natural keyword placement. Minimum ${wordCount} words.",
+  "articleContent": "Complete HTML article structure: <h1>Title</h1> through full content with proper H2/H3 hierarchy. Include: Introduction, Definition section (40-50 word answer), Must-have competitive subtopics, YOUR unique differentiation section with original elements, Step-by-step process (numbered for snippets), Common mistakes to avoid, Expert tips & best practices, and strong Conclusion. For PILLAR: Table of Contents at top, link to all related clusters. For CLUSTER: Link back to parent pillar. Natural keyword placement (0.5-1.5% density). Paragraphs max 3 sentences. Minimum ${validatedWordCount} words.",
+
+  "tableOfContents": ["Section 1", "Section 2", "Section 3", "..."] (PILLAR PAGES ONLY - provides anchor navigation),
 
   "faqSection": [
     {
-      "question": "What is ${keyword}?",
-      "answer": "Direct definition in 40-60 words with keyword and key points"
+      "question": "What is ${validatedKeyword}?",
+      "answer": "Direct definition in 40-60 words with primary keyword and key differentiators"
     },
     {
-      "question": "How does ${keyword} work?",
-      "answer": "Clear process explanation with concrete details"
+      "question": "How [does it work / should you use] ${validatedKeyword}?",
+      "answer": "Clear process explanation with 3-5 concrete steps or practical guidance"
     },
     {
-      "question": "Why is ${keyword} important?",
-      "answer": "Value proposition, benefits, and impact explanation"
+      "question": "Why is ${validatedKeyword} important [for your audience]?",
+      "answer": "Value proposition, benefits, and real-world impact explanation (40-60 words)"
     },
     {
-      "question": "When should you use ${keyword}?",
-      "answer": "Specific use cases and scenarios where it applies"
+      "question": "When should you [use / consider] ${validatedKeyword}?",
+      "answer": "Specific use cases, scenarios, and circumstances where it applies"
     },
     {
-      "question": "What are common ${keyword} mistakes?",
-      "answer": "Pitfalls to avoid and how to prevent them"
+      "question": "What are common ${validatedKeyword} mistakes to avoid?",
+      "answer": "Specific pitfalls, red flags, and how to prevent them"
     },
     {
-      "question": "${keyword} vs alternatives?",
-      "answer": "Comparison highlighting unique advantages"
+      "question": "${validatedKeyword} vs [alternative/competitor]: What's the difference?",
+      "answer": "Direct comparison highlighting unique advantages of primary option"
     }
   ],
 
+  "schemaMarkup": {
+    "types": [
+      "Article (with author Person object with @id, datePublished, dateModified)",
+      "ProfilePage (for author credibility and E-E-A-T)",
+      "FAQPage (for FAQ section with Question/Answer pairs)",
+      "BreadcrumbList (for content hierarchy navigation)"
+    ],
+    "implementation": "Implement all 4 schema types using JSON-LD format in article template. Validate with Google Rich Results Test.",
+    "articleSchema": {
+      "headline": "[Article title]",
+      "author": {
+        "@type": "Person",
+        "@id": "https://supervek.in/author/[name]",
+        "name": "Expert name with credentials"
+      },
+      "datePublished": "[Today's date]",
+      "dateModified": "[Today's date]",
+      "image": "[Featured image URL]",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Supervek"
+      }
+    }
+  },
+
   "eeatSignals": {
-    "authorBio": "Author name: [Expert title/credential] with [specific experience]. Featured in [publications/recognition]. Connect at [LinkedIn/website]",
+    "authorBio": "Author name: [Specific title/expertise] with [X] years experience. Featured in [publications/recognition]. LinkedIn: [URL]",
     "citationPlan": [
       "[Authoritative .gov/.edu source] for [specific claim/statistic]",
-      "[Industry research/study] supporting [data point]",
-      "[Expert/thought leader] regarding [specific insight]",
+      "[Industry research/study] supporting [specific data point]",
+      "[Named expert/thought leader] regarding [specific insight]",
       "[Academic study/whitepaper] for [fact/finding]",
-      "[Industry leader] example demonstrating [concept]"
+      "[Industry leader/brand] example demonstrating [concept]"
     ],
-    "originalElements": ["Specific case study with results", "Personal methodology/framework", "Original data point or research", "Unique perspective on topic"]
+    "originalElements": [
+      "Specific case study with measurable results",
+      "Proprietary methodology or framework unique to this article",
+      "Original data point, survey result, or research finding",
+      "Contrarian perspective challenging common industry wisdom",
+      "Exclusive expert interview or quote"
+    ]
   },
 
   "internalLinkingSuggestions": [
-    "Link to [related pillar page] with anchor '[keyword variation]'",
-    "Link to [subtopic guide] with anchor '[specific topic]'",
-    "Link to [related article] with anchor '[contextual phrase]'",
-    "Link to [supporting resource] with anchor '[descriptive text]'"
+    "Link [Pillar page title] with anchor '[keyword variation]' - appears in [specific section] for context",
+    "Link [Related cluster article] with anchor '[specific subtopic phrase]' - cross-linking with related content",
+    "Link [Supporting guide] with anchor '[descriptive phrase]' - for deeper reader exploration",
+    "Link [Foundational article] with anchor '[terminology]' - helping readers understand prerequisites"
   ],
 
   "externalLinkingSuggestions": [
-    "Cite [.gov/.edu source] for [specific claim]",
-    "Link to [industry research] for [statistic/data]",
-    "Reference [recognized expert] for [insight]",
-    "Link to [authoritative blog/publication] for [information]"
+    "Cite [.gov/.edu/industry source] for [specific claim] - Link: [URL]",
+    "Reference [industry research/study] for [statistic/data] - Link: [URL]",
+    "Quote [recognized expert] for [insight] - Link: [expert profile or publication]",
+    "Link to [authoritative publication/blog] for [information type] - Link: [URL]"
   ],
 
   "imageRequirements": [
-    "Hero image: [Specific description of ideal featured image]",
-    "Infographic: [Concept that needs visual representation]",
-    "Process diagram: [Step-by-step process to visualize]",
-    "Comparison table visual: [Comparison to illustrate]"
+    "Featured/Hero image: [Specific description] - Size: 1200x630px (16:9 ratio), Filename: [descriptive-name].jpg",
+    "Inline image 1: [Concept to visualize] - Size: 800-1200px width, Alt text: [keyword-rich description]",
+    "Inline image 2: [Comparison or process diagram] - Size: 800-1200px width, Alt text: [relevant keywords]",
+    "Inline image 3: [Additional visual element] - Size: 800-1200px width, Alt text: [descriptive]"
   ],
 
   "technicalSEOChecklist": {
     "completed": [
-      "✓ Primary keyword in title, H1, first 100 words, conclusion",
-      "✓ Secondary keywords naturally in H2/H3 headings",
-      "✓ Keyword density: 0.5-1.5% (natural distribution)",
-      "✓ Proper H1→H2→H3 hierarchy throughout",
-      "✓ Word count: [actual] words (meets/exceeds competitors)",
-      "✓ Paragraphs: 2-3 sentences max for mobile scannability",
-      "✓ Lists: Formatted for readability (bullets vs numbers)",
-      "✓ FAQ section: [X] optimized questions for snippets",
-      "✓ Internal links: [X] contextual links to related content",
-      "✓ External links: [X] citations to authoritative sources",
-      "✓ Meta description: 150-160 chars with primary keyword and CTA"
+      "✓ Primary keyword '${validatedKeyword}' in: title (first 60 chars), H1, first 100 words, last paragraph",
+      "✓ Secondary keywords in H2/H3 headings: [list keywords placed]",
+      "✓ Keyword density: 0.5-1.5% (natural distribution, zero stuffing)",
+      "✓ Proper H1→H2→H3 hierarchy: No skipped heading levels throughout",
+      "✓ Word count: [actual count] words (meets/exceeds ${validatedWordCount} minimum and competitor benchmarks)",
+      "✓ Paragraphs: All limited to 2-3 sentences max for mobile scannability",
+      "✓ Lists: Strategic use of bullets for benefits/features and numbers for processes",
+      "✓ Tables: [X] comparison tables with clean HTML structure for snippet optimization",
+      "✓ FAQ section: [X] Q&As targeting People Also Ask queries with featured snippet formatting",
+      "✓ Internal links: [X] contextual links to related pillar/cluster articles with keyword-rich anchor text",
+      "✓ External links: [X] citations to authoritative sources (.gov, .edu, industry leaders)",
+      "✓ Meta description: 155-160 characters with primary keyword, value prop, and CTA",
+      "✓ Images: [X] images optimized < 200KB with descriptive filenames and keyword-rich alt text",
+      "✓ 'Last Updated' date: Visible at top/bottom for freshness signal",
+      "✓ Author bio: Present with E-E-A-T credentials and social/professional links"
     ]
   },
 
-  "schemaMarkup": {
-    "types": ["Article (with author, datePublished, dateModified)", "FAQ (for question/answer sections)", "Breadcrumb"],
-    "implementation": "Implement using JSON-LD format in article template"
+  "contentSummary": "2-3 sentence summary of key value proposition, main takeaways, and why this content uniquely serves the reader's search intent",
+
+  "contentStrategy": {
+    "pageType": "PILLAR (3000-5000+ words, comprehensive, links to clusters) OR CLUSTER (1500-2500 words, focused, links to pillar)",
+    "linkedContent": "PILLAR links to: [list of 6-7 related cluster articles]. CLUSTER links back to: [parent pillar name] and cross-links: [2-3 related clusters]",
+    "targetAIVisibility": "Optimized for ChatGPT, Perplexity, Google AI Overviews through featured snippet targeting, statistics with citations, and structured data markup"
   },
 
-  "contentSummary": "2-3 sentence summary of key value proposition and main takeaways for quick reference",
-
-  "tags": ["primary-keyword", "secondary-keyword", "topic-category", "use-case", "industry-term", "audience-level", "related-concept"],
+  "tags": ["primary-keyword", "secondary-keyword", "topic-category", "use-case", "audience-segment", "related-concept", "industry-term"],
 
   "postPublishChecklist": [
-    "Add author bio section at bottom with credentials and social links",
-    "Include 'Last Updated: [Today's date]' at top of article",
-    "Implement schema markup using JSON-LD format",
-    "Compress and optimize all images (<200KB each)",
-    "Add internal links from 3-5 related existing articles",
-    "Set up Google Search Console tracking for this URL",
-    "Monitor with Google Analytics for traffic and engagement",
-    "Plan content refresh date (6 months out for updates)"
+    "Add author bio section with E-E-A-T credentials (title, experience, social links, LinkedProfilePage schema)",
+    "Add 'Last Updated: [Today's date]' prominently at top for freshness signal",
+    "Implement all 4 schema markups: Article, FAQPage, ProfilePage, BreadcrumbList (validate with Google Rich Results Test)",
+    "Optimize and compress all images to < 200KB each with descriptive filenames",
+    "Add internal links from 3-5 related existing articles pointing TO this article",
+    "Create Google Search Console tracking for this URL and keyword tracking",
+    "Set up Google Analytics events for engagement (time on page, scroll depth, internal link clicks)",
+    "Add to internal linking map for future content strategy",
+    "Plan content refresh date (6 months) for 'Last Updated' maintenance and fresh insights",
+    "Submit sitemap to Google Search Console for faster indexing"
   ]
 }
 
 ═══════════════════════════════════════════════════════════
-EXECUTION INSTRUCTIONS
+EXECUTION INSTRUCTIONS (10-PHASE PROCESS)
 ═══════════════════════════════════════════════════════════
 
-1. Start with competitive analysis - understand what you're up against
-2. Define your differentiation - what makes this better?
-3. Map semantic entities - what concepts must be included?
-4. Structure logically - match content to search intent
-5. Write like an expert - confident, specific, conversational
-6. Optimize technically - follow all SEO requirements
-7. Validate quality - genuinely better than competitors?
+1. **ARTICLE TYPE**: Determine if PILLAR (3000-5000+ words) or CLUSTER (1500-2500 words)
+2. **COMPETITIVE ANALYSIS**: Understand top 10 competitors, gaps, must-have topics, word counts, SERP features
+3. **DIFFERENTIATION**: Define what makes this uniquely better (research, contrarian view, deeper analysis, original data)
+4. **SEMANTIC ENTITIES**: Map 10-15 concepts Google expects for this topic
+5. **CONTENT ARCHITECTURE**: Structure with clear H1→H2→H3 hierarchy, proper sections, Table of Contents (if pillar)
+6. **AI SNIPPET OPTIMIZATION**: Include 2-3 statistics with citations, structured format, direct 40-50 word answers
+7. **EEAT IMPLEMENTATION**: Author credentials, citations, original evidence, transparency, expert sourcing
+8. **SCHEMA MARKUP**: Plan Article, ProfilePage, FAQPage, BreadcrumbList JSON-LD implementation
+9. **HUMAN AUTHENTICITY**: Write with personality, specific examples, conversational tone (not robotic)
+10. **TECHNICAL SEO**: Validate all on-page SEO, keyword density, internal/external links, meta tags, images
 
-CRITICAL REMINDERS:
-- Match or EXCEED top competitor word count
-- Every claim must be specific and substantiated
-- Avoid generic AI patterns - write with personality
-- Focus on user value FIRST, SEO second (include both)
-- Make content scannable with strategic formatting
-- Include conversational elements for human touch
-- End with clear next steps or strong CTA
+CRITICAL QUALITY GATES:
+✓ Genuinely better value than competitors (user-first, SEO-second)
+✓ No generic AI patterns ("In today's world..." etc)
+✓ E-E-A-T signals present and verifiable
+✓ Proper schema markup for AI visibility
+✓ Scannable formatting with mobile in mind
+✓ Match or EXCEED competitor word counts
+✓ Every claim substantiated with specific examples or citations
+✓ For PILLAR: Links to all relevant cluster articles
+✓ For CLUSTER: Links back to parent pillar + cross-links
 
-NOW EXECUTE: Create the complete article following all 8 phases above.
-Return ONLY the JSON object with all fields populated. No markdown code blocks. No extra text.`;
+NOW EXECUTE: Create the complete article following all 10 phases and 3 quality gates above.
+Return ONLY the JSON object with all fields populated. No markdown code blocks. No extra text. No exceptions.`;
 
     // 5. Call Gemini API
     console.log("Calling Gemini API...");
@@ -425,10 +568,16 @@ Return ONLY the JSON object with all fields populated. No markdown code blocks. 
     let blogData: BlogData;
     try {
       // Strip markdown code fence if present
-      const cleanedText = text
-        .replace(/^```[\w]*\n?/, "")
-        .replace(/\n?```$/, "")
-        .trim();
+      let cleanedText = text;
+      // Remove opening markdown code fence
+      if (cleanedText.startsWith("```")) {
+        cleanedText = cleanedText.replace(/^```[\w]*\n?/, "");
+      }
+      // Remove closing markdown code fence
+      if (cleanedText.endsWith("```")) {
+        cleanedText = cleanedText.replace(/\n?```$/, "");
+      }
+      cleanedText = cleanedText.trim();
 
       // Log the response for debugging
       console.log("Cleaned response length:", cleanedText.length);
@@ -488,8 +637,8 @@ Return ONLY the JSON object with all fields populated. No markdown code blocks. 
       }
 
       // Ensure articleContent exists and fallback to content if not
-      const articleContent = blogData.articleContent || (blogData as Record<string, unknown>).content;
-      if (!articleContent) {
+      const articleContentCheck = blogData.articleContent || (blogData as unknown as Record<string, unknown>).content;
+      if (!articleContentCheck) {
         throw new Error(
           "No article content generated. Please try again."
         );
@@ -560,7 +709,7 @@ Return ONLY the JSON object with all fields populated. No markdown code blocks. 
 
     // 9. Create article in Shopify
     console.log("Creating article in Shopify...");
-    const articleContent = blogData.articleContent || (blogData as Record<string, unknown>).content || "";
+    const articleContent = blogData.articleContent || (blogData as unknown as Record<string, unknown>).content || "";
     const articleSlug = blogData.urlSlug || blogData.selectedTitle
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
